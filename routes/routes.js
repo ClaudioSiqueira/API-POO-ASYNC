@@ -8,6 +8,7 @@ router.get('/', HomeController.index);
 router.get('/users', UserController.index)
 router.get('/user/:id', UserController.findOne)
 router.post('/user', UserController.create)
+router.delete('/user/:id', UserController.del)
 router.put('/user/:id', UserController.edit)
 
 module.exports = router;

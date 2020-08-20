@@ -39,8 +39,11 @@ class User{
 
     async update(id, email, name, role){
         try{
-            let emailDup = await this.findEmail(email)
-            if(!emailDup){
+            let emailDup = false
+            if(email != undefined){
+                let emailDup = await this.findEmail(email)
+            }
+            if(emailDup == false){
                 if(email != undefined){
                     await knex.where({id:id}).update({email:email}).table('users')
                 }
@@ -59,6 +62,14 @@ class User{
         }
     }
 
+
+    async delete(id){
+        try{
+            await knex.where({id:id}).delete().table('users')
+        }catch(err){
+            console.log(err)
+        }
+    }
 
     async findEmail(email){
         let result = await knex.select().table('users').where({email: email})

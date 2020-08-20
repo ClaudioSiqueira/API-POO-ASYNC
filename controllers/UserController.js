@@ -1,5 +1,6 @@
 let User = require('../models/User')
 const knex = require('../database/connection')
+const { findById } = require('../models/User')
 class UserController{
 
 
@@ -63,16 +64,13 @@ class UserController{
         }
         let trueId = await User.findById(id)
         if(trueId.length > 0){
-            let {email, name, role} = req.body
-            let result = await User.update(id, email, name, role)
-            if(result == 1){
-                res.status(200)
-                res.send('Update feito com sucesso')
-            }else{
-                res.status(406)
-                res.json({err: "Email duplicado"})
-                return
-                }
+        let {email, name, role} = req.body
+        let result = await User.update(id, email, name, role)
+        if(result == 1){
+            res.status(200)
+            res.send('Update feito com sucesso')
+            }
+                
             }else{
                 res.status(404)
                 res.json({err: 'Nenhum usuário com o id: ' + id})
@@ -80,8 +78,25 @@ class UserController{
             }
         }
 
-
-
+        async del(req, res){
+            let id = req.params.id
+            if(isNaN(id)){
+                res.status(400)
+                res.json({err: "ID não é um número"})
+                return
+            }
+            let result = await User.findById(id)
+            if(result.length > 0){
+                await User.delete(id)
+                res.status(200)
+                res.send('Usuário ' + id + ' deletato com sucesso')
+                return
+            }else{
+                res.status(404)
+                res.json({err: 'Nenhum usuário com o id: ' + id})
+                return
+            }
+        }
 
 
 }
