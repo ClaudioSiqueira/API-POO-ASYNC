@@ -1,6 +1,7 @@
 let User = require('../models/User')
 const knex = require('../database/connection')
 const { findById } = require('../models/User')
+const PasswordToken = require('../models/PasswordToken')
 class UserController{
 
 
@@ -95,6 +96,18 @@ class UserController{
                 res.status(404)
                 res.json({err: 'Nenhum usuário com o id: ' + id})
                 return
+            }
+        }
+
+        async recoverPassword(req, res){
+            let email = req.body.email
+            let result = await PasswordToken.create(email)
+            if(result.status){
+                res.status(200)
+                res.send("" + result.token)
+            }else{
+                res.status(406)
+                res.send(result.err)
             }
         }
 
